@@ -1,2 +1,71 @@
-database name : pms_db
-Select "employee_akpoly.sql" file and import rh database in phpmyadmin
+# System Employee Management (PHP/MySQL)
+
+## Overview
+This repository contains an Employee Management System built with PHP, MySQL, and Bootstrap. It provides separate portals for Admin and Employee users with features including authentication, profile management, leave requests, and reporting.
+
+## Database
+- Database name: `pms_db`
+- SQL script: `employee_akpoly/employee_akpoly.sql`
+- Import via phpMyAdmin:
+  1. Create a database named `pms_db`
+  2. Import `employee_akpoly/employee_akpoly.sql`
+
+## Project Structure
+- `database/` - database connection scripts (`connect.php`, `connect2.php`)
+- `Account/` - registration, login, and forgot password pages
+- `Admin/` - admin dashboard, user management, leave management, profile settings
+- `Employee/` - employee dashboard, leave application, leave history, profile settings
+- `css/`, `js/`, `fonts/`, `images/`, `plugin/` - frontend assets and UI libraries
+- `employee_akpoly/` - alternate app grouping with similar structure
+
+## Requirements
+- PHP 7.x or 8.x
+- MySQL / MariaDB
+- Apache (XAMPP/WAMP) or equivalent PHP web server
+- Web browser
+
+## Setup
+1. Copy repository to your web root (e.g. `C:\xampp\htdocs\System-Employee-Management`).
+2. Start Apache and MySQL services.
+3. Open `http://localhost/phpmyadmin`.
+4. Create a new database called `pms_db`.
+5. Import `employee_akpoly/employee_akpoly.sql`.
+6. Configure DB credentials in `database/connect.php` and `database/connect2.php` as needed.
+7. Access app via:
+   - `http://localhost/System-Employee-Management/Account/Login.php`
+   - or `http://localhost/System-Employee-Management/employee_akpoly/Account/Login.php`
+
+## Features
+- Admin:
+  - login/logout
+  - add/edit/delete users and admins
+  - view/edit profile and photo
+  - process and delete leave applications
+  - leave reports and user records
+- Employee:
+  - login/logout
+  - edit profile and photo
+  - apply for leave
+  - view leave history
+  - change password
+- Account:
+  - registration and forgot password
+
+## Notes
+- Ensure secure password hashing (prefer `password_hash`)
+- Use prepared statements to prevent SQL injection
+- Validate all user inputs
+
+## Troubleshooting
+- If blank page, enable `display_errors` in `php.ini`.
+- If DB error, verify credentials and DB name in `connect.php`.
+- If routing fails, confirm folder path and URL base.
+
+## Contribution
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit and push changes.
+4. Open a pull request.
+
+## License
+Add a license file (MIT, Apache, etc.) for project usage guidelines.
