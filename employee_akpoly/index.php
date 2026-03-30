@@ -348,6 +348,11 @@
             flex-wrap: wrap;
         }
 
+        .cta-actions .btn {
+            min-width: 170px;
+            text-align: center;
+        }
+
         .footer {
             background: #0f172a;
             padding-top: 24px;
@@ -409,6 +414,10 @@
 
             .cta-actions {
                 justify-content: flex-start;
+            }
+
+            .cta-actions .btn {
+                width: 100%;
             }
         }
     </style>
