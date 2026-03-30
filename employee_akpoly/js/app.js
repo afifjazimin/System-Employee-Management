@@ -23,9 +23,41 @@
 	// SmoothLink
 	$('.nav-item a, .mouse-down a').on('click', function(event) {
 	    var $anchor = $(this);
-	    $('html, body').stop().animate({
-	        scrollTop: $($anchor.attr('href')).offset().top - 0
-	    }, 1500, 'easeInOutExpo');
+	    var target = $anchor.attr('href');
+
+	    if (!target || target.charAt(0) !== '#' || $(target).length === 0) {
+	        return;
+	    }
+
+	    var startY = window.pageYOffset;
+	    var endY = $(target).offset().top - 20;
+	    var distance = endY - startY;
+	    var duration = 1200;
+	    var startTime = null;
+
+	    function easeInOutCubic(progress) {
+	        return progress < 0.5
+	            ? 4 * progress * progress * progress
+	            : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+	    }
+
+	    function animateScroll(currentTime) {
+	        if (!startTime) {
+	            startTime = currentTime;
+	        }
+
+	        var elapsed = currentTime - startTime;
+	        var progress = Math.min(elapsed / duration, 1);
+	        var easedProgress = easeInOutCubic(progress);
+
+	        window.scrollTo(0, startY + (distance * easedProgress));
+
+	        if (progress < 1) {
+	            window.requestAnimationFrame(animateScroll);
+	        }
+	    }
+
+	    window.requestAnimationFrame(animateScroll);
 	    event.preventDefault();
 	});
 
