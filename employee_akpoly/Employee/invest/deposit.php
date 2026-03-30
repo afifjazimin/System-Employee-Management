@@ -160,34 +160,16 @@ header("Location: deposit.php");
 </style>
 </head>
 
-<body>
+<body class="employee-dashboard">
      <div id="wrapper">
-
-    <nav class="navbar-default navbar-static-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav metismenu" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element"> <span>
-                            <img src="../../<?php echo $rowaccess['photo'];  ?>" alt="image" width="142" height="153" class="img-circle" />
-                             </span>
-  
-   
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"><span class="text-muted text-xs block"><?php echo $rowaccess['email'];  ?> <b class="caret"></b></span> </span> </a>
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                            
-                            <li><a href="logout.php">Logout</a></li>
-                        </ul>
-  </div>	
-			   <?php
-			   include('sidebar.php');
-			   
-			   ?>
-			   
-	       </ul>
-
-        </div>
-    </nav>
+    <?php
+    $employeeSidebarAssetPrefix = '../../';
+    $employeeSidebarMenuPath = __DIR__ . DIRECTORY_SEPARATOR . 'sidebar.php';
+    $employeeSidebarLogoutHref = '../logout.php';
+    $employeeSidebarPortalTitle = 'Employee Portal';
+    $employeeSidebarSiteName = 'Investment Workspace';
+    include('../employee_sidebar_shell.php');
+    ?>
 
         <div id="page-wrapper" class="gray-bg">
         <div class="row border-bottom">

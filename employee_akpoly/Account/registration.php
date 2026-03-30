@@ -1,35 +1,34 @@
-<?php 
-include('../inc/topbar.php'); 
+<?php
+include('../inc/topbar.php');
 
-    if(isset($_POST["btnsubmit"])){
-         
-    $employeeID= 'STAFF/FKP/'.date("Y").'/'.rand(1000,5009);  
+if(isset($_POST["btnsubmit"])){
+
+    $employeeID = 'STAFF/FKP/'.date("Y").'/'.rand(1000,5009);
     $sql = 'INSERT INTO tblemployee(employeeID,fullname,password,sex,email,dob,phone,address,qualification,dept,employee_type,date_appointment,basic_salary,gross_pay,status,leave_status,photo) VALUES(:employeeID,:fullname,:password,:sex,:email,:dob,:phone,:address,:qualification,:dept,:employee_type,:date_appointment,:basic_salary,:gross_pay,:status,:leave_status,:photo)';
     $statement = $dbh->prepare($sql);
     $statement->execute([
-	':employeeID' => $employeeID ,
-	':fullname' => $_POST['txtfullname'],
-	':password' => $_POST['txtpassword'],
-    ':sex' => $_POST['cmdsex'],
-	':email' => $_POST['txtemail'],
-    ':dob' => '',
-	':phone' => $_POST['txtphone'],
-    ':address' => '',
-	':qualification' => '',
-    ':dept' => $_POST['cmddept'],
-	':employee_type' => $_POST['cmdemployeetype'],
-	':date_appointment' => '',
-    ':basic_salary' => $_POST['txtbasic_salary'],
-	':gross_pay' =>  $_POST['txtgross_pay'],
-    ':leave_status' => 'Not Available',
-    ':gross_pay' =>  $_POST['txtgross_pay'],
-    ':photo' => 'uploadImage/Profile/default.png'
+        ':employeeID' => $employeeID,
+        ':fullname' => $_POST['txtfullname'],
+        ':password' => $_POST['txtpassword'],
+        ':sex' => $_POST['cmdsex'],
+        ':email' => $_POST['txtemail'],
+        ':dob' => '',
+        ':phone' => $_POST['txtphone'],
+        ':address' => '',
+        ':qualification' => '',
+        ':dept' => $_POST['cmddept'],
+        ':employee_type' => $_POST['cmdemployeetype'],
+        ':date_appointment' => '',
+        ':basic_salary' => $_POST['txtbasic_salary'],
+        ':gross_pay' => $_POST['txtgross_pay'],
+        ':status' => '1',
+        ':leave_status' => 'Not Available',
+        ':photo' => 'uploadImage/Profile/default.png'
     ]);
     if ($statement){
-      $_SESSION['success']='Registration was Successful';
+        $_SESSION['success'] = 'Registration was Successful';
     } else {
-     $_SESSION['error']='Something went Wrong';
-
+        $_SESSION['error'] = 'Something went Wrong';
     }
 }
 ?>
@@ -53,163 +52,322 @@ include('../inc/topbar.php');
     <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/switchery.min.css">
     <link href="../css/doublesided.css" rel="stylesheet" />
     <link rel="icon" type="image/png" sizes="16x16" href="../image/logo.jpeg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+        :root {
+            --login-bg: #f9fafb;
+            --login-surface: #ffffff;
+            --login-border: #e5e7eb;
+            --login-text: #111827;
+            --login-muted: #6b7280;
+            --login-accent: #000000;
+            --login-accent-hover: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body.registration-page {
+            min-height: 100vh;
+            margin: 0;
+            color: var(--login-text);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.98), rgba(249, 250, 251, 0.96)),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            font-family: "Inter", sans-serif;
+        }
+
+        .login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 760px;
+        }
+
+        .login-card {
+            width: 100%;
+            background: var(--login-surface);
+            border: 1px solid var(--login-border);
+            border-radius: 12px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.05);
+            padding: 38px 36px;
+        }
+
+        .login-card h2 {
+            margin: 0 0 10px;
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--login-text);
+        }
+
+        .login-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .login-card-top h2 {
+            margin-bottom: 0;
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid var(--login-border);
+            border-radius: 10px;
+            color: var(--login-text);
+            background: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+
+        .home-button:hover {
+            color: var(--login-text);
+            background: #f8fafc;
+            border-color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .login-subtitle {
+            margin: 0 0 34px;
+            font-size: 1rem;
+            color: var(--login-muted);
+            line-height: 1.6;
+        }
+
+        .login-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        .login-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #ffffff;
+            color: var(--login-text);
+            font-size: 0.98rem;
+            padding: 0 16px;
+            box-shadow: none;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%), linear-gradient(135deg, #6b7280 50%, transparent 50%);
+            background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+            background-size: 6px 6px, 6px 6px;
+            background-repeat: no-repeat;
+            padding-right: 40px;
+        }
+
+        .login-submit {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--login-accent);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+        }
+
+        .login-submit:hover,
+        .login-submit:focus {
+            background: var(--login-accent-hover);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .login-footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--login-muted);
+        }
+
+        .login-footer a {
+            color: var(--login-text);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        @media (max-width: 767px) {
+            .login-card {
+                padding: 30px 22px;
+                border-radius: 12px;
+            }
+
+            .login-card h2 {
+                font-size: 1.75rem;
+            }
+
+            .login-card-top {
+                align-items: center;
+            }
+
+            .login-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-group-full {
+                grid-column: auto;
+            }
+        }
+    </style>
 </head>
 
-<body style="height:100vh;overflow-y:auto;" class="d-flex flex-column">
-
-    <div class="form-body">
-        <div class="row">
-            <div class="img-holder d-flex flex-column">
-                <div class="aa"></div>
-                <div class="bb"></div>
-                <div class="info-holder" style="z-index:4;">
-                    <br />
-                    <a class=" btn btn-outline-light text-white" style="z-index: 10000;position: relative;" href="../index.php">← Home</a>
-
-                </div>
-                <section class="footer pt-0 mt-auto bg-dark" style="z-index:1000">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="text-center footer-alt my-1">
-                                    <p class="f-15">
-                                        <?php include('../inc/footer2.php'); ?>
-                                    </p>
-                                </div>
+<body class="registration-page">
+    <div class="login-shell">
+            <div class="login-wrapper">
+                <div class="login-card">
+                    <div class="login-card-top">
+                        <h2>Employee Registration</h2>
+                        <a href="../index.php" class="home-button">Home</a>
+                    </div>
+                <p class="login-subtitle">Create your employee account with the same refined interface used across the admin portal.</p>
+                <form method="post" id="regForm" class="login-form" novalidate autocomplete="off" action="">
+                    <div class="login-grid">
+                        <div class="form-group">
+                            <label class="login-label" for="txtsurname">Full name</label>
+                            <div class="controls">
+                                <input class="form-control" type="text" placeholder="Enter your full name" required data-validation-required-message="Fullname is required" data-val="true" data-val-required="The Fullname field is required." id="txtsurname" name="txtfullname" value="">
                             </div>
                         </div>
-                    </div>
-                </section>
-            </div>
-            <div class="form-holder" style="height: 100%;overflow-y: auto; max-height:unset;">
-                <div class="aa"></div>
-                <div class="bb"></div>
-
-                <div class="form-content" style="max-height: unset;">
-
-                    <div class="form-items card" style="z-index:100">
-                    <img src="../image/logo.png" alt="" class="logo-light" height="81">
-
-                        <div class="card-header d-flex flex-wrap">
-                            
-                            <a href="../index.php" style="z-index: 3;" class="btn p-2 btn-outline-primary mr-auto d-inline-flex align-items-center"><i class="fas fa-home fa-2x" title="home"></i></a>
-                            <h4 class="mr-auto my-auto text-center">Employee Registration</h4>
-                            <div class="ml-auto"></div>
+                        <div class="form-group">
+                            <label class="login-label" for="txtphone">Mobile number</label>
+                            <div class="controls">
+                                <input class="form-control" type="text" placeholder="Enter your mobile number" required data-validation-required-message="Mobile Number is required" data-val="true" data-val-required="The Phone field is required." id="txtphone" name="txtphone" value="">
+                                <span id="error-msg" class="hide"></span>
+                            </div>
                         </div>
-
-                        <div class="card-body">
-                            <form method="post" id="regForm" class="form form-horizontal" novalidate autocomplete="off" action="">
-                                <div class="form-body">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                                <input class="form-control" type="text" placeholder="Fullname" required data-validation-required-message="Fullname is required" data-val="true" data-val-required="The Fullname field is required." id="txtsurname" name="txtfullname" value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <input class="form-control" type="text" placeholder="Mobile Number" required data-validation-required-message="Mobile Number is required" data-val="true" data-val-required="The Phone field is required." id="txtphone" name="txtphone" value="">
-                                                <span id="error-msg" class="hide"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <select class="form-control" required data-validation-required-message="Select Sex " data-val="true" data-val-required="The Sex field is required." id="cmdsex" name="cmdsex">
-                                                    <option value="">Select Sex</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                    </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <input type="text" autocomplete="off" class="form-control" required data-validation-required-message="Email Address is required" data-validation-regex-regex="([a-zA-Z0-9_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})" data-validation-regex-message="Email Address not valid" placeholder="Email Address" data-val="true" data-val-required="The Email field is required." id="txtemail" name="txtemail" value="">
-                                                <span id="error-msg" class="hide"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-
-                                            <div class="controls">
-                                                <input class="form-control" type="Password" placeholder="Password" autocomplete="off" required data-validation-regex-regex="^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])\S{6,12}$" data-validation-regex-message="Password must contain at least an Uppercase, Lowercase and a Number and must be between 6 and 12 digits" data-val="true" data-val-length="You must specify a password between 6 and 12 characters" data-val-length-max="12" data-val-length-min="6" data-val-required="The Password field is required." id="txtpassword" maxlength="12" name="txtpassword">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-
-                                            <select class="form-control" required data-validation-required-message="Select Employee Department" data-val="true" data-val-required="The Employee Department field is required." id="cmddept" name="cmddept">
-                                                    <option value="">... Select Department ...</option>
-                                                    <option value="Security">Security</option>
-                                                    <option value="Bursary">Bursary</option>
-                                                    <option value="Student Affairs">Student Affairs</option>
-                                                    <option value="Clinic">Clinic</option>
-                                                    <option value="ICT">ICT</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Science & Technology">Science & Technology</option>
-                                                    <option value="Management Technolgy">Management Technolgy</option>
-                                                    <option value="Engineering Technology">Engineering Technology</option>
-                                                    
-
-                                                    </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <select class="form-control" required data-validation-required-message="Select Emplooyee Type" data-val="true" data-val-required="The Employee Type field is required." id="cmdemployeetype" name="cmdemployeetype">
-                                                    <option value="">Select Employee Type</option>
-                                                    <option value="Academic">Academic</option>
-                                                    <option value="Non-Academic">Non-Academic</option>
-                                                    </select>
-                                         </div>
-                                        </div>
-                                       
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <input class="form-control" type="number" placeholder="Basic Salary" required data-validation-required-message="Basic Salary is required" data-val="true" data-val-required="The Basic Salary field is required." id="txtbasic_salary" name="txtbasic_salary" value="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-12 form-group mb-2">
-                                            <div class="controls">
-                                            <input class="form-control" type="number" placeholder="Gross Pass" required data-validation-required-message="Gross Pay is required" data-val="true" data-val-required="The Gross Pay field is required." id="txtgross_pay" name="txtgross_pay" value="">
-
-                                            </div>
-                                        </div>
-
-                                    
-                                        </div>
-                                    </div>
-                                    <div class="row">
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12 form-group mb-2">
-
-                                        </div>
-                                    </div>
-                                    <div class="row d-flex flex-wrap">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <button name="btnsubmit" type="submit" class="btn btn-dark">Submit</button>
-                                            </div>
-                                        </div>
-                                        <p>or click<a href="Login.php"> here to login</a> if you have an account</p>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="form-group">
+                            <label class="login-label" for="cmdsex">Sex</label>
+                            <div class="controls">
+                                <select class="form-control" required data-validation-required-message="Select Sex " data-val="true" data-val-required="The Sex field is required." id="cmdsex" name="cmdsex">
+                                    <option value="">Select sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="txtemail">Email address</label>
+                            <div class="controls">
+                                <input type="text" autocomplete="off" class="form-control" required data-validation-required-message="Email Address is required" data-validation-regex-regex="([a-zA-Z0-9_\.-]+)@([\da-zA-Z\.-]+)\.([a-zA-Z\.]{2,6})" data-validation-regex-message="Email Address not valid" placeholder="name@example.com" data-val="true" data-val-required="The Email field is required." id="txtemail" name="txtemail" value="">
+                                <span id="error-msg" class="hide"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="txtpassword">Password</label>
+                            <div class="controls">
+                                <input class="form-control" type="Password" placeholder="Create a password" autocomplete="off" required data-validation-regex-regex="^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])\S{6,12}$" data-validation-regex-message="Password must contain at least an Uppercase, Lowercase and a Number and must be between 6 and 12 digits" data-val="true" data-val-length="You must specify a password between 6 and 12 characters" data-val-length-max="12" data-val-length-min="6" data-val-required="The Password field is required." id="txtpassword" maxlength="12" name="txtpassword">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="cmddept">Department</label>
+                            <div class="controls">
+                                <select class="form-control" required data-validation-required-message="Select Employee Department" data-val="true" data-val-required="The Employee Department field is required." id="cmddept" name="cmddept">
+                                    <option value="">Select department</option>
+                                    <option value="Security">Security</option>
+                                    <option value="Bursary">Bursary</option>
+                                    <option value="Student Affairs">Student Affairs</option>
+                                    <option value="Clinic">Clinic</option>
+                                    <option value="ICT">ICT</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Science & Technology">Science & Technology</option>
+                                    <option value="Management Technolgy">Management Technolgy</option>
+                                    <option value="Engineering Technology">Engineering Technology</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="cmdemployeetype">Employee type</label>
+                            <div class="controls">
+                                <select class="form-control" required data-validation-required-message="Select Emplooyee Type" data-val="true" data-val-required="The Employee Type field is required." id="cmdemployeetype" name="cmdemployeetype">
+                                    <option value="">Select employee type</option>
+                                    <option value="Academic">Academic</option>
+                                    <option value="Non-Academic">Non-Academic</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="txtbasic_salary">Basic salary</label>
+                            <div class="controls">
+                                <input class="form-control" type="number" placeholder="Enter basic salary" required data-validation-required-message="Basic Salary is required" data-val="true" data-val-required="The Basic Salary field is required." id="txtbasic_salary" name="txtbasic_salary" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="login-label" for="txtgross_pay">Gross pay</label>
+                            <div class="controls">
+                                <input class="form-control" type="number" placeholder="Enter gross pay" required data-validation-required-message="Gross Pay is required" data-val="true" data-val-required="The Gross Pay field is required." id="txtgross_pay" name="txtgross_pay" value="">
+                            </div>
+                        </div>
+                        <div class="form-group form-group-full">
+                            <button name="btnsubmit" type="submit" class="btn login-submit">Create account</button>
                         </div>
                     </div>
-                </div>
+                    <p class="login-footer">Already have an account? <a href="Login.php">Sign in</a></p>
+                </form>
             </div>
         </div>
-
     </div>
-
 
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/popper.min.js"></script>
@@ -223,10 +381,7 @@ include('../inc/topbar.php');
     <script src="../app-assets/vendors/js/switchery.min.js" type="text/javascript"></script>
     <script src="../app-assets/js/switch.min.js" type="text/javascript"></script>
     <script src="../js/doublesided.js"></script>
-    
     <script src="../js/IndividualRegistration.js"></script>
-
-
 
     <link rel="stylesheet" href="../css/popup_style.css">
 <?php if(!empty($_SESSION['success'])) {  ?>
@@ -234,7 +389,7 @@ include('../inc/topbar.php');
   <div class="popup__background"></div>
   <div class="popup__content">
     <h3 class="popup__content__title">
-      <strong>Success</strong> 
+      <strong>Success</strong>
     </h1>
     <p><?php echo $_SESSION['success']; ?></p>
     <p>
@@ -242,14 +397,14 @@ include('../inc/topbar.php');
     </p>
   </div>
 </div>
-<?php unset($_SESSION["success"]);  
+<?php unset($_SESSION["success"]);
 } ?>
 <?php if(!empty($_SESSION['error'])) {  ?>
 <div class="popup popup--icon -error js_error-popup popup--visible">
   <div class="popup__background"></div>
   <div class="popup__content">
     <h3 class="popup__content__title">
-      <strong>Error</strong> 
+      <strong>Error</strong>
     </h1>
     <p><?php echo $_SESSION['error']; ?></p>
     <p>

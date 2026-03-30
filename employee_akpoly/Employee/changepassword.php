@@ -38,168 +38,168 @@ header( "refresh:2;url= ../Account/login.php" );
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Change Password| <?php echo $sitename ;?></title>
+    <title>Change Password | <?php echo htmlspecialchars($sitename); ?></title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
-
-    <!-- Morris -->
     <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
-
-    <!-- Gritter -->
     <link href="js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
-
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="16x16" href="../<?php echo $logo;?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="../<?php echo htmlspecialchars($logo);?>">
+
+    <style>
+        :root {
+            --surface: #ffffff;
+            --border: #e6eaf2;
+            --text: #0f172a;
+            --muted: #64748b;
+            --shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+            --primary: #0f172a;
+            --primary-hover: #1e293b;
+            --bg: #f6f7fb;
+        }
+
+        body.employee-dashboard {
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+        
+        #page-wrapper.gray-bg {
+            background: var(--bg);
+        }
+
+        .modern-form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .modern-form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-top: 0;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modern-form-card label {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .modern-form-card .form-control {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            height: auto;
+            transition: all 0.2s;
+            box-shadow: none;
+            color: var(--text);
+        }
+
+        .modern-form-card .form-control:focus {
+            border-color: #94a3b8;
+            box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.15);
+        }
+        
+        .modern-btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .modern-btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            color: #fff;
+        }
+    </style>
 </head>
 
-<body>
+<body class="employee-dashboard">
  <div id="wrapper">
-
-    <nav class="navbar-default navbar-static-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav metismenu" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element"> <span>
-                            <img src="../<?php echo $rowaccess['photo'];  ?>" alt="image" width="142" height="153" class="img-circle" />
-                             </span>
-  
-   
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"><span class="text-muted text-xs block"><?php echo $rowaccess['email'];  ?> <b class="caret"></b></span> </span> </a>
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                            
-                            <li><a href="logout.php">Logout</a></li>
-                        </ul>
-  </div>	
-                 
-			   <?php
-			   include('sidebar.php');
-			   
-			   ?>
-			   
-	       </ul>
-
-        </div>
-    </nav>
+    <?php include('employee_sidebar_shell.php'); ?>
 
         <div id="page-wrapper" class="gray-bg">
-        <div class="row border-bottom">
-        <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            
-        </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-
-<span class="m-r-sm text-muted welcome-message">Welcome to <?php echo $row_website['websitename'];?></span>
-                </li>
-                <li class="dropdown">
-                   
-                    
-
-
-                <li>
-                    <a href="logout.php">
-                        <i class="fa fa-sign-out"></i> Log out
-                    </a>
-                </li>
-               
-            </ul>
-
-        </nav>
-
-
-        </div>
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-lg-10">
-                    <h2></h2>
-                    <ol class="breadcrumb">
-                        <li>
-                            <a href="index.php">Home</a>
-                        </li>
-                       
-                        <li class="active"><strong>Change Password </strong></li>
-                    </ol>
-                </div>
-                <div class="col-lg-2">
-
-                </div>
-            </div>
+        <?php
+        $employeePageTitle = 'Change Password';
+        $employeePageSubtitle = 'Update your account password with the same clean dashboard experience.';
+        $employeeHeaderButtonLink = 'profile.php';
+        $employeeHeaderButtonLabel = 'My Profile';
+        include('employee_header.php');
+        ?>
         <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="row">
-            <div class="col-lg-7">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5></h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
+            <div class="modern-form-container">
+                <div class="modern-form-card">
+                    <h2 class="form-title">Change Password</h2>
+                    <form role="form" method="POST">
+                        <div class="form-group">
+                            <label>Old Password</label>
+                            <input type="password" name="txtold_password" value="<?php echo isset($_POST['txtold_password']) ? htmlspecialchars($_POST['txtold_password']) : ''; ?>" placeholder="Enter Old Password" class="form-control" required="">
                         </div>
-                    </div>
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-sm-6 b-r">
-                              <h3 class="m-t-none m-b"> Change Password </h3>
-                                <form role="form" method="POST">
-                                    <div class="form-group"><strong>
-                                    <label>Old Password</label></strong>
-                                    <input type="password" name="txtold_password" value="<?php if (isset($_POST['txtold_password']))?><?php echo $_POST['txtold_password']; ?>" placeholder="Enter Old Password" class="form-control" required="">
-                                    </div>
-									 <div class="form-group"><strong>
-                                    <label>New Password</label></strong>
-                                    <input type="password" name="txtnew_password" value="<?php if (isset($_POST['txtnew_password']))?><?php echo $_POST['txtnew_password']; ?>" placeholder="Enter New Password" class="form-control" required="">
-                                    </div>
-									 <div class="form-group"><strong>
-                                    <label>Confirm New Password</label></strong>
-                                    <input type="password" name="txtconfirm_password" value="<?php if (isset($_POST['txtconfirm_password']))?><?php echo $_POST['txtconfirm_password']; ?>" placeholder="Confirm New Password" class="form-control" required="">
-                                    </div>
-									
-                                    <div>
-                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit" name="btnchange"><strong>Change Password</strong></button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-sm-6">
-                                
-                                <p class="text-center">&nbsp;</p>
-                            </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" name="txtnew_password" value="<?php echo isset($_POST['txtnew_password']) ? htmlspecialchars($_POST['txtnew_password']) : ''; ?>" placeholder="Enter New Password" class="form-control" required="">
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" name="txtconfirm_password" value="<?php echo isset($_POST['txtconfirm_password']) ? htmlspecialchars($_POST['txtconfirm_password']) : ''; ?>" placeholder="Confirm New Password" class="form-control" required="">
+                        </div>
+                        
+                        <button class="modern-btn-primary" type="submit" name="btnchange">
+                            <i class="fa fa-key"></i> Update Password
+                        </button>
+                    </form>
                 </div>
             </div>
-              <div class="col-lg-5"></div>
-            </div>
-            <div class="row"></div>
         </div>
+        
         <div class="footer">
             <div class="pull-right"></div>
             <div><?php include('../inc/footer.php');  ?></div>
         </div>
 
         </div>
-        </div>
-
+    </div>
 
     <!-- Mainly scripts -->
     <script src="js/jquery-2.1.1.js"></script>
@@ -211,57 +211,44 @@ header( "refresh:2;url= ../Account/login.php" );
     <script src="js/inspinia.js"></script>
     <script src="js/plugins/pace/pace.min.js"></script>
 
-    <!-- iCheck -->
-    <script src="js/plugins/iCheck/icheck.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $('.i-checks').iCheck({
-                    checkboxClass: 'icheckbox_square-green',
-                    radioClass: 'iradio_square-green',
-                });
-            });
-        </script>
-		<link rel="stylesheet" href="../css/popup_style.css">
-<?php if(!empty($_SESSION['success'])) {  ?>
-<div class="popup popup--icon -success js_success-popup popup--visible">
-  <div class="popup__background"></div>
-  <div class="popup__content">
-    <h3 class="popup__content__title">
-      <strong>Success</strong> 
-    </h1>
-    <p><?php echo $_SESSION['success']; ?></p>
-    <p>
-      <button class="button button--success" data-for="js_success-popup">Close</button>
-    </p>
-  </div>
-</div>
-<?php unset($_SESSION["success"]);  
-} ?>
-<?php if(!empty($_SESSION['error'])) {  ?>
-<div class="popup popup--icon -error js_error-popup popup--visible">
-  <div class="popup__background"></div>
-  <div class="popup__content">
-    <h3 class="popup__content__title">
-      <strong>Error</strong> 
-    </h1>
-    <p><?php echo $_SESSION['error']; ?></p>
-    <p>
-      <button class="button button--error" data-for="js_error-popup">Close</button>
-    </p>
-  </div>
-</div>
-<?php unset($_SESSION["error"]);  } ?>
+    <link rel="stylesheet" href="../css/popup_style.css">
+    <?php if(!empty($_SESSION['success'])) {  ?>
+    <div class="popup popup--icon -success js_success-popup popup--visible">
+        <div class="popup__background"></div>
+        <div class="popup__content">
+            <h3 class="popup__content__title">
+                <strong>Success</strong> 
+            </h3>
+            <p><?php echo $_SESSION['success']; ?></p>
+            <p>
+                <button class="button button--success" data-for="js_success-popup">Close</button>
+            </p>
+        </div>
+    </div>
+    <?php unset($_SESSION["success"]);  } ?>
+    
+    <?php if(!empty($_SESSION['error'])) {  ?>
+    <div class="popup popup--icon -error js_error-popup popup--visible">
+        <div class="popup__background"></div>
+        <div class="popup__content">
+            <h3 class="popup__content__title">
+                <strong>Error</strong> 
+            </h3>
+            <p><?php echo $_SESSION['error']; ?></p>
+            <p>
+                <button class="button button--error" data-for="js_error-popup">Close</button>
+            </p>
+        </div>
+    </div>
+    <?php unset($_SESSION["error"]);  } ?>
     <script>
-      var addButtonTrigger = function addButtonTrigger(el) {
-  el.addEventListener('click', function () {
-    var popupEl = document.querySelector('.' + el.dataset.for);
-    popupEl.classList.toggle('popup--visible');
-  });
-};
-
-Array.from(document.querySelectorAll('button[data-for]')).
-forEach(addButtonTrigger);
+        var addButtonTrigger = function addButtonTrigger(el) {
+            el.addEventListener('click', function () {
+                var popupEl = document.querySelector('.' + el.dataset.for);
+                if (popupEl) popupEl.classList.toggle('popup--visible');
+            });
+        };
+        Array.from(document.querySelectorAll('button[data-for]')).forEach(addButtonTrigger);
     </script>
 </body>
-
 </html>
