@@ -9,7 +9,7 @@
     <meta name="keywords" content="employee management system, foundation polytechnic, staff portal" />
     <meta name="author" content="Employee Management System" />
 
-    <link rel="icon" type="image/png" sizes="16x16" href="image/logo.jpeg">
+    <link rel="icon" type="image/png" sizes="16x16" href="image/employeesystem.png">
     <link rel="stylesheet" type="text/css" href="css/pe-icon-7.css" />
     <link rel="stylesheet" href="css/owl.carousel.min.css" />
     <link rel="stylesheet" href="css/owl.theme.default.min.css" />

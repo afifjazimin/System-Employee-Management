@@ -54,7 +54,7 @@ if ($employeeResult) {
   <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
-  <link rel="shortcut icon" href="../<?php echo $logo ;  ?>" type="image/x-png" />
+  <link rel="shortcut icon" href="../image/employeesystem.png" type="image/x-png" />
   <style>
     :root {
       --dashboard-bg: #f6f7fb;

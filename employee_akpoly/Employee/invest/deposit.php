@@ -150,7 +150,7 @@ header("Location: deposit.php");
 
     <link href=../"css/animate.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
-<link rel="icon" type="image/png" sizes="16x16" href="../images/logo.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="../../image/employeesystem.png">
 <style type="text/css">
 <!--
 .style1 {color: #000000}

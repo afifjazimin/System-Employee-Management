@@ -27,7 +27,7 @@ if(isset($_POST['btnlogin']))
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Login | <?php echo $sitename; ?></title>
 
-  <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.jpeg">
+  <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <link rel="stylesheet" href="dist/css/adminlte.min.css">

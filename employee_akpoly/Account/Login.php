@@ -45,17 +45,18 @@ $_SESSION['error']=' Wrong Email Address and Password';
     <link rel="stylesheet" type="text/css" href="../css/iofrm-theme13.css">
     <link href="../css/auth.css" rel="stylesheet" />
     <link href="../css/singlesided.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" sizes="16x16" href="../image/logo.jpeg">
+    <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
         :root {
-            --login-bg: #f3f6fb;
-            --login-surface: rgba(255, 255, 255, 0.9);
-            --login-border: rgba(15, 23, 42, 0.08);
-            --login-text: #0f172a;
-            --login-muted: #64748b;
-            --login-accent: #0f766e;
-            --login-accent-hover: #115e59;
-            --login-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+            --login-bg: #f9fafb;
+            --login-surface: #ffffff;
+            --login-border: #e5e7eb;
+            --login-text: #111827;
+            --login-muted: #6b7280;
+            --login-accent: #000000;
+            --login-accent-hover: #1f2937;
         }
 
         body.login-page {
@@ -63,255 +64,238 @@ $_SESSION['error']=' Wrong Email Address and Password';
             margin: 0;
             color: var(--login-text);
             background:
-                radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 32%),
-                radial-gradient(circle at bottom right, rgba(30, 64, 175, 0.16), transparent 28%),
-                linear-gradient(135deg, #eff6ff 0%, #f8fafc 45%, #ecfeff 100%);
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.98), rgba(249, 250, 251, 0.96)),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            font-family: "Inter", sans-serif;
         }
 
-        .form-body {
-            min-height: calc(100vh - 72px);
+        * {
+            box-sizing: border-box;
+        }
+
+        .login-shell {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 48px 20px;
+            padding: 32px 16px;
         }
 
-        .form-body .row {
+        .login-wrapper {
             width: 100%;
-            margin: 0;
-            justify-content: center;
-        }
-
-        .form-holder {
-            margin-left: 0;
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .form-holder .aa,
-        .form-holder .bb {
-            display: none;
-        }
-
-        .form-holder .form-content {
-            height: auto;
-            min-height: auto;
-            padding: 0;
+            max-width: 460px;
         }
 
         .login-card {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--login-border);
-            border-radius: 28px;
+            width: 100%;
             background: var(--login-surface);
-            box-shadow: var(--login-shadow);
-            backdrop-filter: blur(16px);
-        }
-
-        .login-card::before {
-            content: "";
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 5px;
-            background: linear-gradient(90deg, #0f766e 0%, #14b8a6 55%, #38bdf8 100%);
-        }
-
-        .login-card .card-header,
-        .login-card .card-body {
-            position: relative;
-            z-index: 1;
-            background: transparent;
-            border: 0;
-        }
-
-        .login-card .card-header {
-            padding: 28px 28px 12px;
-        }
-
-        .login-card .card-body {
-            padding: 0 28px 28px;
-        }
-
-        .login-home {
-            width: 44px;
-            height: 44px;
-            padding: 0;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(15, 118, 110, 0.14);
-            color: var(--login-accent);
-            background: rgba(255, 255, 255, 0.78);
-        }
-
-        .login-home:hover {
-            color: var(--login-accent-hover);
-            background: #ffffff;
-        }
-
-        .login-eyebrow {
-            margin-bottom: 8px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--login-accent);
+            border: 1px solid var(--login-border);
+            border-radius: 12px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.05);
+            padding: 38px 36px;
         }
 
         .login-card h2 {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: 700;
+            margin: 0 0 10px;
+            font-size: 2.1rem;
+            font-weight: 600;
+            color: var(--login-text);
+            text-align: left;
             letter-spacing: -0.03em;
         }
 
+        .login-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .login-card-top h2 {
+            margin-bottom: 0;
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid var(--login-border);
+            border-radius: 10px;
+            color: var(--login-text);
+            background: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+
+        .home-button:hover {
+            color: var(--login-text);
+            background: #f8fafc;
+            border-color: #d1d5db;
+            text-decoration: none;
+        }
+
         .login-subtitle {
-            margin: 10px 0 0;
+            margin: 0 0 34px;
+            font-size: 1rem;
             color: var(--login-muted);
+            text-align: left;
             line-height: 1.6;
         }
 
         .login-form .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 22px;
+        }
+
+        .login-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
         }
 
         .login-label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 0.92rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #334155;
+            color: #1f2937;
+            margin: 0;
+        }
+        
+        .forgot-password {
+            font-size: 0.9rem;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password:hover {
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .input-wrapper {
+            position: relative;
         }
 
         .login-form .form-control {
-            height: 56px;
-            border: 1px solid rgba(148, 163, 184, 0.32);
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.96);
+            width: 100%;
+            height: 50px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #ffffff;
             color: var(--login-text);
-            font-size: 1rem;
-            padding: 0 18px;
+            font-size: 0.98rem;
+            padding: 0 16px;
             box-shadow: none;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .login-form .form-control::placeholder {
+            color: #9ca3af;
         }
 
         .login-form .form-control:focus {
-            border-color: rgba(15, 118, 110, 0.48);
-            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12);
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
         }
 
         .login-submit {
             width: 100%;
-            height: 56px;
+            height: 52px;
+            margin-top: 4px;
             border: 0;
-            border-radius: 16px;
-            background: linear-gradient(135deg, var(--login-accent) 0%, #14b8a6 100%);
+            border-radius: 10px;
+            background: var(--login-accent);
             color: #ffffff;
             font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
-            box-shadow: 0 16px 30px rgba(15, 118, 110, 0.25);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
         }
 
         .login-submit:hover,
         .login-submit:focus {
-            background: linear-gradient(135deg, var(--login-accent-hover) 0%, #0f766e 100%);
-            color: #ffffff;
+            background: var(--login-accent-hover);
+            outline: none;
+            transform: translateY(-1px);
         }
 
         .login-footer {
-            margin-top: 20px;
+            margin-top: 28px;
             text-align: center;
+            font-size: 1rem;
             color: var(--login-muted);
         }
 
         .login-footer a {
-            color: var(--login-accent);
+            color: var(--login-text);
             font-weight: 600;
+            text-decoration: none;
         }
 
-        .footer.bg-dark {
-            background: #0f172a !important;
+        .login-footer a:hover {
+            text-decoration: underline;
         }
 
         @media (max-width: 576px) {
-            .form-body {
-                padding: 24px 16px;
-            }
-
-            .login-card .card-header,
-            .login-card .card-body {
-                padding-left: 20px;
-                padding-right: 20px;
+            .login-card {
+                padding: 30px 22px;
+                border-radius: 12px;
             }
 
             .login-card h2 {
-                font-size: 1.7rem;
+                font-size: 1.75rem;
+            }
+
+            .login-card-top {
+                align-items: center;
             }
         }
     </style>
 
 </head>
-<body class="login-page d-flex flex-column">
-        <div class="form-body">
-            <div class="row">
-                <div class="form-holder">
-                    <div class="form-content">
-                        <div class="form-items card login-card">
-                            <div class="card-header">
-                                <div class="d-flex align-items-start justify-content-between">
-                                    <div>
-                                        <p class="login-eyebrow">Employee Portal</p>
-                                        <h2>Welcome back</h2>
-                                        <p class="login-subtitle">Sign in with your employee email to access your dashboard.</p>
-                                    </div>
-                                    <a href="../index.php" class="btn login-home" aria-label="Back to home">
-                                        <i class="fas fa-home"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                            <form method="post" action="" class="login-form">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="login-label" for="txtemail">Email Address</label>
-                                            <input class="form-control" type="email" placeholder="name@example.com" required id="txtemail" name="txtemail" value="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="login-label" for="txtpassword">Password</label>
-                                            <input class="form-control" type="password" placeholder="Enter your password" required id="txtpassword" name="txtpassword">
-                                        </div>
-                                    </div>
-                                </div>
-                                <button name="btnlogin" type="submit" class="btn login-submit">Sign In</button>
-                                <p class="login-footer">Not an employee yet? <a href="registration.php">Register here</a></p>
-
-                        </form>
+<body class="login-page">
+        <div class="login-shell">
+            <div class="login-wrapper">
+                <div class="login-card">
+                    <div class="login-card-top">
+                        <h2>Employee Login</h2>
+                        <a href="../index.php" class="home-button">Home</a>
+                    </div>
+                    <p class="login-subtitle">Sign in to access your employee dashboard with the same clean experience as the admin portal.</p>
+                    <form method="post" action="" class="login-form">
+                        <div class="form-group">
+                            <label class="login-label" for="txtemail">Email address</label>
+                            <div class="input-wrapper">
+                                <input class="form-control" type="email" placeholder="name@example.com" required id="txtemail" name="txtemail" value="">
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <div class="login-label-row">
+                                <label class="login-label" for="txtpassword">Password</label>
+                                <a href="registration.php" class="forgot-password">Need an account?</a>
+                            </div>
+                            <div class="input-wrapper">
+                                <input class="form-control" type="password" placeholder="Enter your password" required id="txtpassword" name="txtpassword">
+                            </div>
+                        </div>
+                        <button name="btnlogin" type="submit" class="btn login-submit">Continue <span aria-hidden="true">&rarr;</span></button>
+                        <p class="login-footer">Don't have an account? <a href="registration.php">Sign up</a></p>
+                    </form>
                 </div>
             </div>
         </div>
-    <section class="footer pt-0 mt-auto bg-dark">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="text-center footer-alt my-1">
-                        <p class="f-15">
-                        <?php include('../inc/footer2.php') ; ?>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <script type="text/javascript" src="../js/jquery.min.js"></script>
     <script type="text/javascript" src="../js/popper.min.js"></script>
     <script type="text/javascript" src="../js/bootstrap.min.js"></script>

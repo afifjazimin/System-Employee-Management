@@ -54,7 +54,7 @@ header( "refresh:2;url= ../Account/login.php" );
     <link href="js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="16x16" href="../<?php echo htmlspecialchars($logo);?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
 
     <style>
         :root {

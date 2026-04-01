@@ -51,7 +51,7 @@ if(isset($_POST["btnsubmit"])){
     <link href="../plugin/TelPlugin/build/css/intlTelInput.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="../app-assets/vendors/css/switchery.min.css">
     <link href="../css/doublesided.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" sizes="16x16" href="../image/logo.jpeg">
+    <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 

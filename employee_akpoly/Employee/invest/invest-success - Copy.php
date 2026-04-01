@@ -36,7 +36,7 @@ $rowaccess = mysqli_fetch_array($result);
 
     <link href="../css/animate.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
-<link rel="icon" type="image/png" sizes="16x16" href="../images/logo.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="../../image/employeesystem.png">
 <style type="text/css">
 <!--
 .style2 {color: #0000FF}

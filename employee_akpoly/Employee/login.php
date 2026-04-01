@@ -126,7 +126,7 @@ $_SESSION['error']=' Wrong Email Address and Password or Account is Not Activate
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="16x16" href="../<?php echo $logo;?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
  <style type="text/css">
 <!--
 .style3 {

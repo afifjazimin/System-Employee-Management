@@ -45,7 +45,7 @@ if ($leave_status === 'Pending') {
     <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="css/animate.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
-    <link rel="icon" type="image/png" sizes="16x16" href="../image/logo.jpeg">
+    <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
     <style>
         :root {
             --dashboard-bg: #f6f7fb;

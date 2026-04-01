@@ -12,7 +12,7 @@ if(empty($_SESSION['admin-username']))
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Leave Record|<?php echo $sitename; ?></title>
-  <link rel="icon" type="image/png" sizes="16x16" href="../<?php echo $logo; ?>">
+  <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
