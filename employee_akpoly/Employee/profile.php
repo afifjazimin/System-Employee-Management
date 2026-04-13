@@ -2,7 +2,7 @@
 include('../inc/topbar.php'); 
 if(empty($_SESSION['login_email']))
     {   
-      header("Location: ../Account/login.php"); 
+      header("Location: login.php"); 
     }
 
 ?>
@@ -360,7 +360,7 @@ if(empty($_SESSION['login_email']))
                         </li>
                         <li class="info-item">
                             <div class="info-label"><i class="fa fa-lock"></i> Password</div>
-                            <div class="info-detail"><?php echo htmlspecialchars($rowaccess['password'] ?? ''); ?></div>
+                            <div class="info-detail">Hidden for security</div>
                         </li>
                     </ul>
                 </div>

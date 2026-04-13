@@ -11,6 +11,6 @@
 -->
 </style>
  <div class="footer">
-          <div class="style1"> <p align="center" class="style2"> Copyright @ [<?php echo date("Y")?>] | An Employee Management System |Crafted By: Asuquo ,Caroline Bassey|AKP/ASC/CSC/HND2021/1477 | All Rights Reserved </p>
+          <div class="style1"> <p align="center" class="style2"> Copyright @ [<?php echo date("Y")?>] | Afif Jazimin Personal Project. All rights reserved. </p>
 </div>
 </div>

@@ -1,7 +1,7 @@
 <?php
 include('../inc/topbar.php');
 if (empty($_SESSION['login_email'])) {
-    header("Location: ../Account/login.php");
+    header("Location: login.php");
 }
 
 if (isset($_POST["btnedit"])) {

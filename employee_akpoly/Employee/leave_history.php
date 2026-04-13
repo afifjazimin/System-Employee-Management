@@ -2,7 +2,7 @@
 include('../inc/topbar.php'); 
 if(empty($_SESSION['login_email']))
     {   
-      header("Location: ../Account/login.php"); 
+      header("Location: login.php"); 
     }
 ?>
 <!DOCTYPE html>

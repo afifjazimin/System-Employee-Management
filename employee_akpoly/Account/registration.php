@@ -363,7 +363,7 @@ if(isset($_POST["btnsubmit"])){
                             <button name="btnsubmit" type="submit" class="btn login-submit">Create account</button>
                         </div>
                     </div>
-                    <p class="login-footer">Already have an account? <a href="Login.php">Sign in</a></p>
+                    <p class="login-footer">Already have an account? <a href="../Employee/login.php">Sign in</a></p>
                 </form>
             </div>
         </div>

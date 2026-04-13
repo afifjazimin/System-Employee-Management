@@ -1,223 +1,336 @@
 <?php
 session_start();
 error_reporting(1);
-include('../connect.php');
 
-//Get website details
-$sql_website = "select * from website_setting"; 
-$result_website = $conn->query($sql_website);
-$row_website = mysqli_fetch_array($result_website);
+include('../database/connect.php');
+include('../database/connect2.php');
 
+$sitename = 'Employee Management System';
 
-if(isset($_POST['btnlogin'])){
-
-
-//Get Date
-date_default_timezone_set('Africa/Lagos');
-$current_date = date('Y-m-d h:i:s');
-
-
-$email = $_POST['txtemail'];
-$password = $_POST['txtpassword'];
-$status = 'Active';
-
-
- $sql = "SELECT * FROM users WHERE email='" .$email. "' and password = '".$password."'  and status = '".$status."'";
-  $result = mysqli_query($conn, $sql);
-
-if (mysqli_num_rows($result) > 0) {
-  // output data of each row
- ($row = mysqli_fetch_assoc($result));
-	 $_SESSION["email"] = $row['email'];
-   $_SESSION["password"] = $row['password'];
- $_SESSION["phone"] = $row['phone'];
- 	 $firstname = $row['firstname'];
- 	  $_SESSION["firstname"] = $row['firstname'];
-
-		 $fa = $row['2FA'];
-
-	}
-if (($fa) =='1') {
-
-
-
-
-// generate OTP
-$_SESSION["vcode"] = rand(100000,999999);
-$phone=$_SESSION["phone"];
-
-//SEnd Verification code Via SMS
-//$username='udgems@gmail.com';//Note: urlencodemust be added forusernameand 
-//$password='Godrules55';// passwordas encryption code for security purpose.
-
-//$sender='AMARITRADE';
-
-//$url = "http://portal.nigeriabulksms.com/api/?username=".$username."&password=".$password."&message="."Your OTP Code is :  ".$_SESSION["vcode"]."&sender=".$sender."&mobiles=".$phone;
-
-//$ch = curl_init();
-//curl_setopt($ch,CURLOPT_URL, $url);
-//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//curl_setopt($ch, CURLOPT_HEADER, 0);
-//$resp = curl_exec($ch);
-
-//SEnd Verification code Via email
-$to = $username;
-			$subject = "OTP|AMARITRADE";
-			$message = "
-				<html>
-				<head>
-				<title>OTP|AMARITRADE t</title>
-				</head>
-				<body>
-				 <img src=\"https://www.amari-trade.com/user/images/favicon.png\">
-			
-			<p>Hello $firstname,</p>
-                            
-							------------------------------------------------------------------------
-                            <p>Here is your OTP : <h2> ".$_SESSION["vcode"]." </h2></p>
-						     ------------------------------------------------------------------------
-			  			
-						<p>It will expire in the next 15 minutes</p>
-			  			
-						<p>Thanks</p>
-
-
-
-				</body>
-				</html>
-				";
-			 //dont forget to include content-type on header if your sending html
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-			$headers .= "From: support@amari-trade.com". "\r\n" ;
-		mail($to,$subject,$message,$headers);
-
-
-
-if($resp){
-
-//save otp
-$query = "INSERT into `verification_code` (v_code, phone, datetime_created)
-VALUES ( '".$_SESSION["vcode"]."', '$phone','$current_date')";
-$result = mysqli_query($conn,$query);
+function employeePasswordColumnTooShort(PDOException $exception): bool
+{
+    return $exception->getCode() === '22001'
+        || stripos($exception->getMessage(), "Data too long for column 'password'") !== false;
 }
 
-		
-header("Location: 2FA-verification.php"); 
-}elseif(($fa) =='0') { 
-header("Location: index.php"); 
-}else { 
-$_SESSION['error']=' Wrong Email Address and Password or Account is Not Activated ';
+if (!empty($_SESSION['login_email'])) {
+    header('Location: index.php');
+    exit;
 }
+
+if (isset($_POST['btnlogin'])) {
+    $email = trim($_POST['txtemail'] ?? '');
+    $password = $_POST['txtpassword'] ?? '';
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Enter a valid email address.';
+    } else {
+        $stmt = $dbh->prepare("SELECT * FROM tblemployee WHERE email = ? LIMIT 1");
+        $stmt->execute([$email]);
+        $employee = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($employee) {
+            $storedPassword = (string) ($employee['password'] ?? '');
+            $status = (string) ($employee['status'] ?? '1');
+            $isActive = $status === '' || $status === '1' || strcasecmp($status, 'active') === 0;
+            $isValidPassword = $storedPassword !== '' && (password_verify($password, $storedPassword) || hash_equals($storedPassword, $password));
+
+            if ($isActive && $isValidPassword) {
+                $needsDatabaseUpgrade = false;
+                if (password_get_info($storedPassword)['algo'] === 0 || password_needs_rehash($storedPassword, PASSWORD_DEFAULT)) {
+                    try {
+                        $upgradeStmt = $dbh->prepare("UPDATE tblemployee SET password = ? WHERE email = ?");
+                        $upgradeStmt->execute([password_hash($password, PASSWORD_DEFAULT), $employee['email']]);
+                    } catch (PDOException $exception) {
+                        if (employeePasswordColumnTooShort($exception)) {
+                            $needsDatabaseUpgrade = true;
+                        } else {
+                            throw $exception;
+                        }
+                    }
+                }
+
+                session_regenerate_id(true);
+                $_SESSION['login_email'] = $employee['email'];
+                $_SESSION['logged'] = time();
+                if ($needsDatabaseUpgrade) {
+                    $_SESSION['success'] = 'Login worked, but the database password column is still too short for hashed passwords. Update the database schema next.';
+                }
+
+                header('Location: index.php');
+                exit;
+            }
+        }
+
+        $_SESSION['error'] = 'Wrong email or password.';
+    }
+
+    header('Location: login.php');
+    exit;
 }
+
+$successMessage = $_SESSION['success'] ?? '';
+$errorMessage = $_SESSION['error'] ?? '';
+unset($_SESSION['success'], $_SESSION['error']);
 ?>
-
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>login Form| <?php echo $row_website['websitename'];?></title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <title>Employee Login | <?php echo htmlspecialchars($sitename); ?></title>
+    <meta name="description" content="Official employee login portal for the Employee Management System.">
     <link rel="icon" type="image/png" sizes="16x16" href="../image/employeesystem.png">
- <style type="text/css">
-<!--
-.style3 {
-	color: #FF0000;
-	font-weight: bold;
-	font-size: 24px;
-}
-.style4 {color: #FF0000}
--->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-</style>
+        :root {
+            --login-bg: #f9fafb;
+            --login-surface: #ffffff;
+            --login-border: #e5e7eb;
+            --login-text: #111827;
+            --login-muted: #6b7280;
+            --login-accent: #000000;
+            --login-accent-hover: #1f2937;
+            --success-bg: #ecfdf3;
+            --success-border: #86efac;
+            --success-text: #166534;
+            --error-bg: #fef2f2;
+            --error-border: #fca5a5;
+            --error-text: #b91c1c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body.login-page {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--login-text);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.98), rgba(249, 250, 251, 0.96)),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            font-family: "Inter", sans-serif;
+        }
+
+        .login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .login-card {
+            width: 100%;
+            background: var(--login-surface);
+            border: 1px solid var(--login-border);
+            border-radius: 12px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.05);
+            padding: 38px 36px;
+        }
+
+        .login-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 10px;
+        }
+
+        .login-card h2 {
+            margin: 0;
+            font-size: 2.1rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--login-text);
+        }
+
+        .home-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid var(--login-border);
+            border-radius: 10px;
+            color: var(--login-text);
+            background: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+
+        .home-button:hover {
+            color: var(--login-text);
+            background: #f8fafc;
+            border-color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .login-subtitle {
+            margin: 0 0 34px;
+            font-size: 1rem;
+            color: var(--login-muted);
+            line-height: 1.6;
+        }
+
+        .login-form {
+            display: grid;
+            gap: 0;
+        }
+
+        .alert {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid;
+            font-size: 0.95rem;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .login-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 50px;
+            padding: 0 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background: #ffffff;
+            color: var(--login-text);
+            font-size: 0.98rem;
+            box-shadow: none;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+        }
+
+        .login-submit {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--login-accent);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+        }
+
+        .login-submit:hover,
+        .login-submit:focus {
+            background: var(--login-accent-hover);
+            outline: none;
+            transform: translateY(-1px);
+        }
+
+        .login-footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 1rem;
+            color: var(--login-muted);
+        }
+
+        .login-footer a {
+            color: var(--login-text);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 767px) {
+            .login-card {
+                padding: 30px 22px;
+                border-radius: 12px;
+            }
+
+            .login-card h2 {
+                font-size: 1.75rem;
+            }
+
+            .login-card-top {
+                align-items: center;
+            }
+        }
+    </style>
 </head>
+<body class="login-page">
+    <div class="login-shell">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <div class="login-card-top">
+                    <h2>Employee Login</h2>
+                    <a href="../index.php" class="home-button">Home</a>
+                </div>
+                <p class="login-subtitle">Sign in with your employee email and password using the same clean layout as the registration page.</p>
 
-<body class="gray-bg">
+                <?php if ($successMessage !== '') { ?>
+                <div class="alert alert-success"><?php echo htmlspecialchars($successMessage); ?></div>
+                <?php } ?>
 
-    <div class="middle-box text-center loginscreen animated fadeInDown">
-        <div>
-            <div>
+                <?php if ($errorMessage !== '') { ?>
+                <div class="alert alert-error"><?php echo htmlspecialchars($errorMessage); ?></div>
+                <?php } ?>
 
-                <h2 class="style3"><?php echo $row_website['url'];?></h2>
-                <h1 class="logo-name"><a href="../index.php"><img src="../img/favicon.png" alt="Amitrade" width="246" height="161" border="0"></a></h1>
+                <form method="POST" action="" class="login-form" autocomplete="off">
+                    <div class="form-group">
+                        <label class="login-label" for="txtemail">Email address</label>
+                        <input type="email" class="form-control" name="txtemail" id="txtemail" placeholder="name@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="login-label" for="txtpassword">Password</label>
+                        <input type="password" class="form-control" name="txtpassword" id="txtpassword" placeholder="Enter your password" required>
+                    </div>
+
+                    <button type="submit" name="btnlogin" class="login-submit">Sign in</button>
+                </form>
+
+                <p class="login-footer">Need an account? <a href="../Account/registration.php">Register here</a></p>
             </div>
-            <h3 class="style4">Login Form </h3>
-            <form class="m-t" role="form" method= "POST" action="">
-                <div class="form-group">
-                    <input type="text" name="txtemail" class="form-control" placeholder="Email" required="">
-                </div>
-                <div class="form-group">
-                    <input type="password" name="txtpassword" class="form-control" placeholder="Password" required="">
-                </div>
-
-                <button type="submit" name="btnlogin" class="btn btn-primary block full-width m-b">Login</button>
-
-
-
-
-                <a href="forgot_password.php"><small>Forgot password?</small></a>
-			
-				
-                <p class="text-muted text-center">&nbsp;</p>
-          </form>
-            <p class="m-t"></p>
-			
         </div>
     </div>
-	
-    <?php include('../inc/footer.php');  ?>
-    <!-- Mainly scripts -->
-    <script src="js/jquery-2.1.1.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="popup_style.css">
-<?php if(!empty($_SESSION['success'])) {  ?>
-<div class="popup popup--icon -success js_success-popup popup--visible">
-  <div class="popup__background"></div>
-  <div class="popup__content">
-    <h3 class="popup__content__title">
-      <strong>Success</strong> 
-    </h1>
-    <p><?php echo $_SESSION['success']; ?></p>
-    <p>
-      <button class="button button--success" data-for="js_success-popup">Close</button>
-    </p>
-  </div>
-</div>
-<?php unset($_SESSION["success"]);  
-} ?>
-<?php if(!empty($_SESSION['error'])) {  ?>
-<div class="popup popup--icon -error js_error-popup popup--visible">
-  <div class="popup__background"></div>
-  <div class="popup__content">
-    <h3 class="popup__content__title">
-      <strong>Error</strong> 
-    </h1>
-    <p><?php echo $_SESSION['error']; ?></p>
-    <p>
-      <button class="button button--error" data-for="js_error-popup">Close</button>
-    </p>
-  </div>
-</div>
-<?php unset($_SESSION["error"]);  } ?>
-    <script>
-      var addButtonTrigger = function addButtonTrigger(el) {
-  el.addEventListener('click', function () {
-    var popupEl = document.querySelector('.' + el.dataset.for);
-    popupEl.classList.toggle('popup--visible');
-  });
-};
-
-Array.from(document.querySelectorAll('button[data-for]')).
-forEach(addButtonTrigger);
-    </script>
 </body>
-
 </html>

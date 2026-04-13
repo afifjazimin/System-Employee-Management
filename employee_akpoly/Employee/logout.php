@@ -2,7 +2,7 @@
  include('../inc/topbar.php'); 
 if(empty($_SESSION['login_email']))
     {   
-      header("Location: ../Account/login.php"); 
+      header("Location: login.php"); 
     } ?>
 
 <?php
@@ -14,7 +14,7 @@ if (isset($_SESSION['logged']) && ($t - $_SESSION['logged'] > 36000)) {
     session_unset();
 	echo ("<script LANGUAGE='JavaScript'>
     window.alert('Sorry , You have been Logout because of inactivity. Try Again');
-    window.location.href='../Account/login.php';
+    window.location.href='login.php';
     </script>");
 	}else {
     $_SESSION['logged'] = time();
@@ -26,7 +26,7 @@ session_destroy(); //destroy the session
 ?>
 
 <script>
-window.location="../Account/login.php";
+window.location="login.php";
 </script>
 <?php
 //to redirect back to "index.php" after logging out

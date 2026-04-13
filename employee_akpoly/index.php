@@ -456,10 +456,10 @@
                         <a href="Account/registration.php" class="nav-link">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a href="Employee/index.php" class="nav-link">Employee Portal</a>
+                        <a href="Employee/login.php" class="nav-link">Employee Portal</a>
                     </li>
                     <li class="nav-item">
-                        <a href="Admin/index.php" class="nav-link">Admin Portal</a>
+                        <a href="Admin/login.php" class="nav-link">Admin Portal</a>
                     </li>
                 </ul>
             </div>
@@ -481,7 +481,7 @@
 
                     <div class="hero-actions">
                         <a href="Account/registration.php" class="btn btn-light">Register Employee</a>
-                        <a href="Employee/index.php" class="btn btn-outline-light">Open Employee Dashboard</a>
+                        <a href="Employee/login.php" class="btn btn-outline-light">Open Employee Dashboard</a>
                     </div>
 
                     <div class="hero-stats">
@@ -537,7 +537,7 @@
                             </div>
                             <h3>Employee Dashboard</h3>
                             <p>Enter the employee area to review records, profile details, and personal workflow tools.</p>
-                            <a href="Employee/index.php" class="btn btn-primary btn-sm">Open Employee Area</a>
+                            <a href="Employee/login.php" class="btn btn-primary btn-sm">Open Employee Area</a>
                         </div>
                     </div>
                     <div class="col-md-6 col-xl-4 mb-4">
@@ -595,8 +595,8 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="cta-actions">
-                        <a href="Admin/index.php" class="btn btn-light">Admin Login</a>
-                        <a href="Employee/index.php" class="btn btn-outline-light">Employee Login</a>
+                        <a href="Admin/login.php" class="btn btn-light">Admin Login</a>
+                        <a href="Employee/login.php" class="btn btn-outline-light">Employee Login</a>
                         </div>
                     </div>
                 </div>

@@ -2,8 +2,14 @@
 include('../inc/topbar.php'); 
 if(empty($_SESSION['login_email']))
     {   
-      header("Location: ../Account/login.php"); 
+      header("Location: login.php"); 
     }
+
+function employeePasswordColumnTooShort(PDOException $exception): bool
+{
+    return $exception->getCode() === '22001'
+        || stripos($exception->getMessage(), "Data too long for column 'password'") !== false;
+}
   $q = "select * from tblemployee where email = '$email'";
   $q1 = $conn->query($q);
   while($row = mysqli_fetch_array($q1)){
@@ -17,7 +23,7 @@ $old = mysqli_real_escape_string($conn,$_POST['txtold_password']);
 $pass_new = mysqli_real_escape_string($conn,$_POST['txtnew_password']);
 $confirm_new = mysqli_real_escape_string($conn,$_POST['txtconfirm_password']);
  
-  if($db_pass!=$old){  
+  if(!(password_verify($old, $db_pass) || hash_equals((string)$db_pass, $old))){  
      $_SESSION['error']='Old Password not matched';
 
    } else if(strlen($pass_new) < 8){ 
@@ -27,11 +33,23 @@ $confirm_new = mysqli_real_escape_string($conn,$_POST['txtconfirm_password']);
     $_SESSION['error']='NEW Password and CONFIRM password not Matched';
  
   } else {
-    
-   $sql = "update  tblemployee set `password`='$confirm_new' where email= '$email'";
-  $res = $conn->query($sql);	
-header( "refresh:2;url= ../Account/login.php" ); 
+   $passwordHash = password_hash($confirm_new, PASSWORD_DEFAULT);
+   try {
+     $stmt = $dbh->prepare("UPDATE tblemployee SET password = ? WHERE email = ?");
+     $res = $stmt->execute([$passwordHash, $email]);
+     if ($res) {
+header( "refresh:2;url= login.php" ); 
    $_SESSION['success']='Password changed Successfully...';
+     } else {
+       $_SESSION['error']='Unable to update password';
+     }
+   } catch (PDOException $exception) {
+     if (employeePasswordColumnTooShort($exception)) {
+       $_SESSION['error']='Your database password column is still too short. Run the database update before changing passwords.';
+     } else {
+       throw $exception;
+     }
+   }
     }
   }
  
