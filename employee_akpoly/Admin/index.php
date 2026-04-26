@@ -24,7 +24,7 @@ function dashboardInitials($name) {
 }
 
 $row_no_employee = dashboardCount($conn, "SELECT * FROM tblemployee");
-$row_no_leave = dashboardCount($conn, "SELECT * FROM tblleave");
+$row_no_leave_new = dashboardCount($conn, "SELECT * FROM tblleave WHERE status = 'Pending' OR status IS NULL OR status = ''");
 $row_no_leave_approved = dashboardCount($conn, "SELECT * FROM tblleave WHERE status = 'Approved'");
 $row_no_leave_declined = dashboardCount($conn, "SELECT * FROM tblleave WHERE status = 'Declined'");
 
@@ -613,11 +613,11 @@ if ($employeeResult) {
           <div class="dashboard-card stat-card">
             <div class="stat-head">
               <span class="stat-icon"><i class="far fa-calendar-alt"></i></span>
-              <span>Leave Requests</span>
+              <span>New Request</span>
             </div>
             <div class="stat-value">
-              <?php echo $row_no_leave; ?>
-              <span class="stat-pill pill-success">All time</span>
+              <?php echo $row_no_leave_new; ?>
+              <span class="stat-pill pill-warning">Pending</span>
             </div>
           </div>
 
@@ -684,7 +684,7 @@ if ($employeeResult) {
                       <td>
                         <div class="employee-meta">
                           <?php if (!empty($employee['photo'])) { ?>
-                            <img src="../<?php echo htmlspecialchars($employee['photo']); ?>" alt="<?php echo htmlspecialchars($employee['fullname']); ?>" class="employee-avatar">
+                            <img src="../<?php echo htmlspecialchars(safe_relative_image_path($employee['photo']) ?: 'images/default_avatar.png', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($employee['fullname'], ENT_QUOTES, 'UTF-8'); ?>" class="employee-avatar">
                           <?php } else { ?>
                             <span class="employee-avatar-fallback"><?php echo dashboardInitials($employee['fullname']); ?></span>
                           <?php } ?>

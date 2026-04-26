@@ -5,6 +5,19 @@ if(empty($_SESSION['admin-username']))
       header("Location: login.php");
     }
 
+function formatAdminLeaveDate($value) {
+    if (empty($value)) {
+        return 'N/A';
+    }
+
+    $timestamp = strtotime((string)$value);
+    if ($timestamp === false) {
+        return (string)$value;
+    }
+
+    return date('d M Y', $timestamp);
+}
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,9 +90,148 @@ else {return false;
 
 </script>
   <style type="text/css">
-<!--
-.style7 {vertical-align:middle; cursor:pointer; -webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none; border:1px solid transparent; padding:.375rem .75rem; line-height:1.5; border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; display: inline-block; color: #212529; text-align: center;}
--->
+    .leave-review-card .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .leave-review-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .leave-review-table {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .leave-review-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f8fafc !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      white-space: nowrap;
+    }
+
+    .leave-review-table tbody tr {
+      transition: background-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .leave-review-table tbody tr:hover {
+      background: #fcfdff;
+      box-shadow: inset 0 0 0 9999px rgba(248, 250, 252, 0.45);
+    }
+
+    .leave-review-table tbody td {
+      vertical-align: middle;
+    }
+
+    .leave-review-table .employee-cell {
+      min-width: 230px;
+    }
+
+    .leave-review-table .leave-id-cell,
+    .leave-review-table .status-cell,
+    .leave-review-table .action-cell {
+      white-space: nowrap;
+    }
+
+    .leave-review-table .date-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .leave-review-table .reason-cell {
+      min-width: 250px;
+      max-width: 340px;
+    }
+
+    .leave-review-table .reason-box {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      line-height: 1.5;
+      white-space: normal;
+    }
+
+    .leave-review-table .role-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 10px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .leave-review-table .dept-text {
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .leave-review-table .admin-inline-actions {
+      gap: 10px;
+      justify-content: flex-start;
+    }
+
+    .leave-review-table .admin-action-link {
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    }
+
+    .leave-review-table .admin-action-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .leave-review-table .admin-action-link i {
+      font-size: 0.92rem;
+    }
+
+    .leave-review-table .admin-action-link.delete-action {
+      min-width: 40px;
+      justify-content: center;
+      padding: 0 12px;
+    }
+
+    .leave-review-table .admin-action-link.delete-action span {
+      display: none;
+    }
+
+    @media (max-width: 991px) {
+      .leave-review-table .reason-cell {
+        min-width: 220px;
+      }
+    }
   </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed admin-dashboard">
@@ -109,42 +261,51 @@ else {return false;
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-              <div class="card list-card">
+              <?php
+              $data = $dbh->query("select * FROM tblemployee,tblleave where tblemployee.email = tblleave.email order by tblleave.start_date DESC")->fetchAll();
+              ?>
+              <div class="card list-card leave-review-card">
                 <div class="card-header">
                   <h3 class="card-title">Leave Applications</h3>
+                  <span class="leave-review-summary"><?php echo count($data); ?> applications</span>
                 </div>
                 <div class="card-body">
-                  <table class="table table-bordered table-striped admin-data-table" id="example1">
+                  <table class="table admin-data-table leave-review-table" id="example1">
                     <thead>
                     <tr>
                       <th>Employee</th>
                       <th>Leave ID</th>
                       <th>Role</th>
                       <th>Department</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Reason</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
-                  $data = $dbh->query("select * FROM tblemployee,tblleave where tblemployee.email = tblleave.email order by tblleave.start_date DESC")->fetchAll();
                   $cnt=1;
                   foreach ($data as $row) {
                     ?>
                       <tr class="gradeX">
-                        <td>
+                        <td class="employee-cell">
                           <div class="admin-row-user">
-                            <img src="../<?php echo $row['photo']; ?>" alt="<?php echo htmlspecialchars($row['fullname']); ?>" class="table-avatar">
+                            <img src="../<?php echo htmlspecialchars(safe_relative_image_path($row['photo']) ?: 'images/default_avatar.png', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($row['fullname'], ENT_QUOTES, 'UTF-8'); ?>" class="table-avatar">
                             <div>
-                              <div class="admin-row-title"><?php echo $row['fullname']; ?></div>
-                              <div class="admin-row-subtitle"><?php echo $row['email']; ?></div>
+                              <div class="admin-row-title"><?php echo htmlspecialchars($row['fullname'], ENT_QUOTES, 'UTF-8'); ?></div>
+                              <div class="admin-row-subtitle"><?php echo htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8'); ?></div>
                             </div>
                           </div>
                         </td>
-                        <td><span class="admin-tag"><?php echo $row['leaveID']; ?></span></td>
-                        <td><?php echo $row['employee_type']; ?> Staff</td>
-                        <td><?php echo $row['dept']; ?></td>
-                        <td>
+                        <td class="leave-id-cell"><span class="admin-tag"><?php echo htmlspecialchars($row['leaveID'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td><span class="role-chip"><?php echo htmlspecialchars($row['employee_type'], ENT_QUOTES, 'UTF-8'); ?> Staff</span></td>
+                        <td><span class="dept-text"><?php echo htmlspecialchars($row['dept'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td><span class="date-chip"><?php echo htmlspecialchars(formatAdminLeaveDate($row['start_date']), ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td><span class="date-chip"><?php echo htmlspecialchars(formatAdminLeaveDate($row['end_date']), ENT_QUOTES, 'UTF-8'); ?></span></td>
+                        <td class="reason-cell"><div class="reason-box"><?php echo nl2br(htmlspecialchars($row['reason'], ENT_QUOTES, 'UTF-8')); ?></div></td>
+                        <td class="status-cell">
                           <?php if(($row['status'])=="Pending")
 						{ ?>
                           <span class="admin-status-pill warning">Pending</span>
@@ -154,15 +315,31 @@ else {return false;
                           <span class="admin-status-pill danger">Declined</span>
                           <?php } ?>		
                         </td>
-			                  <td class="text-nowrap">
+			                  <td class="action-cell">
                           <div class="admin-inline-actions">
-                             <?php if($row['status']=="Pending" || $row['status']=="Declined" )
-                            { ?>
-                            <a class="admin-action-link success" href="process_leave.php?id=<?php echo $row['leaveID'];?>" onClick="return approve('<?php echo $row['fullname']; ?>');"><i class="fa fa-check" title="Approve Leave Application"></i><span>Approve</span></a>
-                              <?php } else {?>
-                              <a class="admin-action-link warning" href="process_leave.php?did=<?php echo $row['leaveID'];?>" onClick="return decline('<?php echo $row['fullname']; ?>');"><i class="fa fa-times" title="Decline Leave Application"></i><span>Decline</span></a>
-                            <?php } ?>
-                            <a class="admin-action-link danger" href="delete-leave.php?id=<?php echo $row['leaveID'];?>" onClick="return deldata('<?php echo $row['fullname']; ?>');"><i class="fas fa-trash-alt"></i><span>Delete</span></a>
+                            <form method="post" action="process_leave.php" class="d-inline" onsubmit="return approve(<?php echo htmlspecialchars(json_encode($row['fullname']), ENT_QUOTES, 'UTF-8'); ?>);">
+                              <?php echo csrf_field(); ?>
+                              <input type="hidden" name="leave_id" value="<?php echo htmlspecialchars($row['leaveID'], ENT_QUOTES, 'UTF-8'); ?>">
+                              <input type="hidden" name="action" value="approve">
+                              <button type="submit" class="admin-action-link success">
+                                <i class="fa fa-check" title="Approve Leave Application"></i><span>Approve</span>
+                              </button>
+                            </form>
+                            <form method="post" action="process_leave.php" class="d-inline" onsubmit="return decline(<?php echo htmlspecialchars(json_encode($row['fullname']), ENT_QUOTES, 'UTF-8'); ?>);">
+                              <?php echo csrf_field(); ?>
+                              <input type="hidden" name="leave_id" value="<?php echo htmlspecialchars($row['leaveID'], ENT_QUOTES, 'UTF-8'); ?>">
+                              <input type="hidden" name="action" value="decline">
+                              <button type="submit" class="admin-action-link warning">
+                                <i class="fa fa-times" title="Decline Leave Application"></i><span>Decline</span>
+                              </button>
+                            </form>
+                            <form method="post" action="delete-leave.php" class="d-inline" onsubmit="return deldata(<?php echo htmlspecialchars(json_encode($row['fullname']), ENT_QUOTES, 'UTF-8'); ?>);">
+                              <?php echo csrf_field(); ?>
+                              <input type="hidden" name="id" value="<?php echo htmlspecialchars($row['leaveID'], ENT_QUOTES, 'UTF-8'); ?>">
+                              <button type="submit" class="admin-action-link danger delete-action" title="Delete Leave Application">
+                                <i class="fas fa-trash-alt"></i><span>Delete</span>
+                              </button>
+                            </form>
                           </div>
                         </td>
                     </tr>
@@ -174,7 +351,7 @@ else {return false;
 
                 </div>
                 <div class="table-footer">
-                  <div>Showing <?php echo $cnt-1; ?> of <?php echo $cnt-1; ?> employees</div>
+                  <div>Showing <?php echo $cnt-1; ?> of <?php echo $cnt-1; ?> applications</div>
                   <div class="table-footer-pages">
                     <span>Prev</span>
                     <span class="page-pill">1</span>
